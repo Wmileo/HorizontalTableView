@@ -38,7 +38,13 @@
         HorizontalTableViewCell *cell = [self.dataSource horizontalTableView:self cellForRow:rowInfo.row];
         cell.frame = CGRectMake(rowInfo.left, 0, rowInfo.width, self.frame.size.height);
         cell.row = rowInfo.row;
+        if (self.delegate) {
+            [self.delegate horizontalTableView:self willDisplayCell:cell forRow:rowInfo.row];
+        }
         [self addSubview:cell];
+        if (self.delegate) {
+            [self.delegate horizontalTableView:self didEndDisplayCell:cell forRow:rowInfo.row];
+        }
         [self.currentVisibleCells addObject:cell];
     }
 }
@@ -113,7 +119,7 @@
                     }
                 }
             }
-             
+            
             self.currentVisibleRowInfos = [rowInfos copy];
         }
         
