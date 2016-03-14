@@ -14,21 +14,13 @@
 @property (nonatomic, strong) NSMutableArray<__kindof HorizontalTableViewCell *> *currentVisibleCells;
 @property (nonatomic, copy) NSArray *currentVisibleRowInfos;
 
+@property (nonatomic, assign) CGFloat maxWidth;
+
 @end
 
 @implementation HorizontalTableView
 
 @dynamic delegate;
-
--(instancetype)init{
-    self = [super init];
-    if (self) {
-        self.currentVisibleCells = [NSMutableArray arrayWithCapacity:5];
-        self.reUsedCells = [NSMutableDictionary dictionaryWithCapacity:3];
-    }
-    return self;
-}
-
 
 -(void)reloadData{
     for (UIView *view in self.currentVisibleCells) {
@@ -45,7 +37,9 @@
     if (self.dataSource) {
         HorizontalTableViewCell *cell = [self.dataSource horizontalTableView:self cellForRow:rowInfo.row];
         cell.frame = CGRectMake(rowInfo.left, 0, rowInfo.width, self.frame.size.height);
+        cell.row = rowInfo.row;
         [self addSubview:cell];
+        [self.currentVisibleCells addObject:cell];
     }
 }
 
@@ -77,13 +71,12 @@
                 CGFloat left = width;
                 CGFloat cellWidth = [self.dataSource horizontalTableView:self widthForRow:i];
                 CGFloat right = width + cellWidth;
-                if (left >= screenLeft &&
-                    left < screenRight &&
-                    right > screenLeft &&
-                    right <= screenRight) {
-                    
-
-                    width += cellWidth;
+                width += cellWidth;
+                if ((left >= screenLeft &&
+                    left < screenRight) ||
+                    (right > screenLeft &&
+                    right <= screenRight)) {
+                        
                     RowInfo row = RowInfoMake(i, left, width, cellWidth);
                     [rowInfos addObject:[NSValue valueWithRowInfo:row]];
                     NSArray *remain = [tmp copy];
@@ -93,7 +86,6 @@
                         if (rowInfo.row == i) {
                             hasRowInfo = YES;
                             [tmp removeObject:value];
-                            NSLog(@"remove");
                             break;
                         }
                     }
@@ -101,12 +93,12 @@
                     if (!hasRowInfo) {
                         [self addCellWithRowInfo:row];
                     }
-                    
-                    
-                }else if (width >= screenRight){
-                    break;
+
                 }
             }
+            
+            self.maxWidth = width;
+            self.contentSize = CGSizeMake(width, CGRectGetHeight(self.frame));
             
             //移除屏幕外的cell
             for (HorizontalTableViewCell *cell in cells) {
@@ -141,10 +133,27 @@
 #pragma mark - 重用
 -(id)dequeueReusableCellWithIdentifier:(NSString *)identifier{
     NSMutableArray *arr = [NSMutableArray arrayWithArray:self.reUsedCells[identifier]];
-    HorizontalTableViewCell *cell = arr.firstObject;
-    [arr removeObject:cell];
-    self.reUsedCells[cell.reuseIdentifier] = arr;
-    return cell;
+    if (arr.count > 0) {
+        HorizontalTableViewCell *cell = arr.firstObject;
+        [arr removeObject:cell];
+        self.reUsedCells[cell.reuseIdentifier] = arr;
+        return cell;
+    }
+    return nil;
+}
+
+#pragma mark - set get
+-(NSMutableArray<HorizontalTableViewCell *> *)currentVisibleCells{
+    if (!_currentVisibleCells) {
+        _currentVisibleCells = [NSMutableArray arrayWithCapacity:5];
+    }
+    return _currentVisibleCells;
+}
+-(NSMutableDictionary *)reUsedCells{
+    if (!_reUsedCells) {
+        _reUsedCells = [NSMutableDictionary dictionaryWithCapacity:3];
+    }
+    return _reUsedCells;
 }
 
 @end

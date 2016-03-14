@@ -10,7 +10,7 @@
 
 @interface HorizontalTableViewCell : UIView
 
-@property (nonatomic, readonly, strong) NSString *reuseIdentifier;
+@property (nonatomic, copy) NSString *reuseIdentifier;
 
 @property (nonatomic, assign) NSInteger row;
 

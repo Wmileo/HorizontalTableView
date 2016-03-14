@@ -10,12 +10,23 @@
 
 @implementation HorizontalTableViewCell
 
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect {
-    // Drawing code
+-(id)initWithReuseIdentifier:(NSString *)reuseIdentifier{
+    self = [super init];
+    if (self) {
+        self.reuseIdentifier = reuseIdentifier;
+    }
+    return self;
 }
-*/
+
+-(NSString *)reuseIdentifier{
+    if (!_reuseIdentifier) {
+        return @"";
+    }
+    return _reuseIdentifier;
+}
+
+-(void)prepareForReuse{
+
+}
 
 @end
