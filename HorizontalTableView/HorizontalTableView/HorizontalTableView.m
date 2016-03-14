@@ -113,7 +113,7 @@
                     }
                 }
             }
-            
+             
             self.currentVisibleRowInfos = [rowInfos copy];
         }
         
