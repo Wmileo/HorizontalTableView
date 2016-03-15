@@ -16,6 +16,8 @@
 
 @property (nonatomic, assign) CGFloat maxWidth;
 
+@property (nonatomic, copy) NSArray *allRowInfos;
+
 @end
 
 @implementation HorizontalTableView
@@ -28,7 +30,12 @@
     }
     [self.currentVisibleCells removeAllObjects];
     self.currentVisibleRowInfos = nil;
-    [self setNeedsDisplay];
+    [self checkVisibleRowInfosWhenMove];
+}
+
+-(void)displayRow:(NSInteger)row animation:(BOOL)animation{
+    RowInfo rowInfo = [self.allRowInfos[row] rowInfoValue];
+    [self setContentOffset:CGPointMake(rowInfo.left, 0) animated:animation];
 }
 
 #pragma mark -
@@ -38,13 +45,7 @@
         HorizontalTableViewCell *cell = [self.dataSource horizontalTableView:self cellForRow:rowInfo.row];
         cell.frame = CGRectMake(rowInfo.left, 0, rowInfo.width, self.frame.size.height);
         cell.row = rowInfo.row;
-        if (self.delegate) {
-            [self.delegate horizontalTableView:self willDisplayCell:cell forRow:rowInfo.row];
-        }
         [self addSubview:cell];
-        if (self.delegate) {
-            [self.delegate horizontalTableView:self didEndDisplayCell:cell forRow:rowInfo.row];
-        }
         [self.currentVisibleCells addObject:cell];
     }
 }
@@ -62,6 +63,7 @@
         RowInfo rightRowInfo = [self.currentVisibleRowInfos.lastObject rowInfoValue];
         CGFloat screenLeft = self.contentOffset.x;
         CGFloat screenRight = self.contentOffset.x + self.frame.size.width;
+        
         if (screenLeft < leftRowInfo.left ||
             screenLeft >= leftRowInfo.right ||
             screenRight > rightRowInfo.right ||
@@ -73,17 +75,22 @@
             NSInteger num = [self.dataSource numberOfRows];
             CGFloat width = 0;
             NSMutableArray *rowInfos = [NSMutableArray arrayWithCapacity:10];
+            NSMutableArray *allRowInfos = [NSMutableArray arrayWithCapacity:10];
+            
             for (int i = 0; i < num; i++) {
                 CGFloat left = width;
                 CGFloat cellWidth = [self.dataSource horizontalTableView:self widthForRow:i];
                 CGFloat right = width + cellWidth;
                 width += cellWidth;
+                
+                RowInfo row = RowInfoMake(i, left, width, cellWidth);
+                [allRowInfos addObject:[NSValue valueWithRowInfo:row]];
+                
                 if ((left >= screenLeft &&
                     left < screenRight) ||
                     (right > screenLeft &&
                     right <= screenRight)) {
-                        
-                    RowInfo row = RowInfoMake(i, left, width, cellWidth);
+
                     [rowInfos addObject:[NSValue valueWithRowInfo:row]];
                     NSArray *remain = [tmp copy];
                     BOOL hasRowInfo = NO;
@@ -103,8 +110,10 @@
                 }
             }
             
+            self.allRowInfos = [allRowInfos copy];
+            
             self.maxWidth = width;
-            self.contentSize = CGSizeMake(width, CGRectGetHeight(self.frame));
+            self.contentSize = CGSizeMake((width > self.bounds.size.width ? width : self.bounds.size.width + 1), CGRectGetHeight(self.frame));
             
             //移除屏幕外的cell
             for (HorizontalTableViewCell *cell in cells) {

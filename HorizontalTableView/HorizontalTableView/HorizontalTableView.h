@@ -27,18 +27,9 @@ typedef struct {
 
 @end
 
-@protocol HorizontalTableViewDelegate <NSObject, UIScrollViewDelegate>
-
-@optional
--(void)horizontalTableView:(HorizontalTableView *)horizontalTableView willDisplayCell:(HorizontalTableViewCell *)cell forRow:(NSInteger)row;
--(void)horizontalTableView:(HorizontalTableView *)horizontalTableView didEndDisplayCell:(HorizontalTableViewCell *)cell forRow:(NSInteger)row;
-
-@end
-
 @interface HorizontalTableView : UIScrollView
 
 @property (nonatomic, assign) id <HorizontalTableViewDataSourse> dataSource;
-@property (nonatomic, assign) id <HorizontalTableViewDelegate> delegate;
 
 -(void)reloadData;
 
@@ -46,6 +37,8 @@ typedef struct {
 
 @property (nonatomic, readonly) NSArray<__kindof HorizontalTableViewCell *> *visibleCells;
 @property (nonatomic, readonly) NSArray *visibleRowInfos;
+
+-(void)displayRow:(NSInteger)row animation:(BOOL)animation;
 
 @end
 
