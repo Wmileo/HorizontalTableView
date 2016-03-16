@@ -25,6 +25,9 @@ typedef struct {
 -(HorizontalTableViewCell *)horizontalTableView:(HorizontalTableView *)horizontalTableView cellForRow:(NSInteger)row;
 -(CGFloat)horizontalTableView:(HorizontalTableView *)horizontalTableView widthForRow:(NSInteger)row;
 
+@optional
+-(void)horizontalTableView:(HorizontalTableView *)horizontalTableView displayCells:(NSArray *)cells;
+
 @end
 
 @interface HorizontalTableView : UIScrollView

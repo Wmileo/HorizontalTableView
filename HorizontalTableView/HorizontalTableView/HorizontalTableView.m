@@ -128,7 +128,9 @@
                     }
                 }
             }
-            
+            if ([self.dataSource respondsToSelector:@selector(horizontalTableView:displayCells:)]) {
+                [self.dataSource horizontalTableView:self displayCells:self.currentVisibleCells];
+            }
             self.currentVisibleRowInfos = [rowInfos copy];
         }
         
