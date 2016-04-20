@@ -120,6 +120,7 @@
                 for (NSValue *value in tmp) {
                     RowInfo row = [value rowInfoValue];
                     if (row.row == cell.row) {
+                        [cell prepareForReuse];
                         [cell removeFromSuperview];
                         [self.currentVisibleCells removeObject:cell];
                         NSMutableArray *arr = [NSMutableArray arrayWithArray:self.reUsedCells[cell.reuseIdentifier]];
