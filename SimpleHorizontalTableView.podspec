@@ -1,5 +1,5 @@
 Pod::Spec.new do |s|
-  s.name         = "SimpleHorizontalTableView"
+  s.name         = "HorizontalTableView"
   s.version      = "0.0.3"
   s.summary      = "横向tableview"
   s.description  = <<-DESC
