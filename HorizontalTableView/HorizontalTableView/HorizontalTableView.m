@@ -72,7 +72,7 @@
             NSMutableArray *tmp = [NSMutableArray arrayWithArray:self.currentVisibleRowInfos];
             NSArray *cells = [self.currentVisibleCells copy];
             
-            NSInteger num = [self.dataSource numberOfRows];
+            NSInteger num = [self.dataSource numberOfRowsWithHorizontalTableView:self];
             CGFloat width = 0;
             NSMutableArray *rowInfos = [NSMutableArray arrayWithCapacity:10];
             NSMutableArray *allRowInfos = [NSMutableArray arrayWithCapacity:10];

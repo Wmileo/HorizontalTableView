@@ -21,7 +21,7 @@ typedef struct {
 
 @protocol HorizontalTableViewDataSourse <NSObject>
 
--(NSInteger)numberOfRows;
+-(NSInteger)numberOfRowsWithHorizontalTableView:(HorizontalTableView *)horizontalTableView;
 -(HorizontalTableViewCell *)horizontalTableView:(HorizontalTableView *)horizontalTableView cellForRow:(NSInteger)row;
 -(CGFloat)horizontalTableView:(HorizontalTableView *)horizontalTableView widthForRow:(NSInteger)row;
 

@@ -9,7 +9,7 @@
 #import "ViewController.h"
 #import "HorizontalTableView.h"
 
-@interface ViewController () <HorizontalTableViewDataSourse,HorizontalTableViewDelegate>
+@interface ViewController () <HorizontalTableViewDataSourse>
 
 @property (nonatomic, strong) HorizontalTableView *hTableView;
 
@@ -34,7 +34,7 @@
 
 #pragma mark - datasource
 
--(NSInteger)numberOfRows{
+-(NSInteger)numberOfRowsWithHorizontalTableView:(HorizontalTableView *)horizontalTableView{
     return 10;
 }
 
