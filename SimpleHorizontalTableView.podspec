@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "SimpleHorizontalTableView"
-  s.version      = "0.0.3"
+  s.version      = "0.1.0"
   s.summary      = "横向tableview"
   s.description  = <<-DESC
 					 可以横向的tableview
